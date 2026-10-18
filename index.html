@@ -39,10 +39,16 @@
         </section>
     </main>
 
-    <div class="model add-new-task">
-        <input type="text" placeholder="Task title">
-        <textarea name="description" id="description" placeholder="Description"></textarea>
-        <button id="add-new-task">Add Task</button>
+    <div class="modal add-new-task">
+        <div class="bg"></div>
+        <div class="center">
+            <input type="text" id="taskTitle" placeholder="Task title">
+            <textarea name="description" id="description" placeholder="Description"></textarea>
+            <div class="btn">
+                <button id="add-new-task" class="add-new-task">Add Task</button>
+                <button id="cancle">Cancle</button>
+            </div>
+        </div>
     </div>
 </body>
 <script src="script.js"></script>
