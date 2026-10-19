@@ -1,80 +1,202 @@
+
+let tasks = [];
+
 const todo = document.querySelector("#todo");
 const progress = document.querySelector("#progress");
 const done = document.querySelector("#done");
-let dragElement = null;
-const task = document.querySelectorAll(".task");
 
 const cancle = document.querySelector("#cancle");
 const addTaskBtn = document.querySelector("#task-toggle");
 const modal = document.querySelector(".modal");
 const addTask = document.querySelector("#add-new-task");
-const title = document.querySelector("#taskTitle");
-const description = document.querySelector("#description");
+const titleInput = document.querySelector("#taskTitle");
+const descriptionInput = document.querySelector("#description");
 
-task.forEach(task =>{
-    task.addEventListener("drag",(event)=>{
-        dragElement = task;
-    });
-});
+let dragElement = null;
 
-addTaskBtn.addEventListener("click",()=>{
-    modal.classList.add("active");
-});
-cancle.addEventListener("click",()=>{
-    modal.classList.remove("active");
-});
+// Map each status to its column
+const columns = {
+    todo,
+    progress,
+    done
+};
 
-addTask.addEventListener("click",(dets)=>{
-    const title = document.querySelector("#taskTitle").value;
-    const description = document.querySelector("#description").value;
+// Save all tasks
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
-    const div = document.createElement("div");
-    div.classList.add("task");
-    div.setAttribute("draggable","true");
+// Load saved tasks
+function loadTasks() {
+    try {
+        const savedTasks = localStorage.getItem("tasks");
+        tasks = savedTasks ? JSON.parse(savedTasks) : [];
 
-    div.innerHTML = 
-                    `<h2>${title}</h2>
-                    <p>${description}</p>
-                    <button>Delete</button>`;
+        if (!Array.isArray(tasks)) {
+            tasks = [];
+        }
+    } catch (error) {
+        console.error("Unable to load saved tasks:", error);
+        tasks = [];
+    }
+}
 
-    todo.appendChild(div);
-    [todo,done,progress].forEach((col)=>{
-        const tasks = col.querySelectorAll('.task');
-        const count = col.querySelector(".right");
-        count.innerText = tasks.length;
-    });
-    div.addEventListener("drag",(event)=>{
-        dragElement = div;
-    });
-    modal.classList.remove("active");
-});
+// Update column task counts
+function updateCounts() {
+    Object.values(columns).forEach(column => {
+        const count = column.querySelector(".right");
 
-function dragEventOnColumn(column) {
-    column.addEventListener("dragenter",(event)=>{
-        event.preventDefault();
-        column.classList.add("hover-over");
-    });  
-    column.addEventListener("dragleave",(event)=>{
-        event.preventDefault();
-        column.classList.remove("hover-over");
-    });
-    column.addEventListener("dragover",(event)=>{
-        event.preventDefault();
-    });
-    column.addEventListener("drop",(event)=>{
-        event.preventDefault();
-        console.dir("Dropped",dragElement);
-        column.appendChild(dragElement);
-        column.classList.remove("hover-over");
-
-        [todo,done,progress].forEach((col)=>{
-            const tasks = col.querySelectorAll('.task');
-            const count = col.querySelector(".right");
-            count.innerText = tasks.length;
-        });
+        if (count) {
+            count.textContent =
+                column.querySelectorAll(".task").length;
+        }
     });
 }
 
-dragEventOnColumn(todo);
-dragEventOnColumn(progress);
-dragEventOnColumn(done);
+// Create one task card
+function createTaskCard(task) {
+    const div = document.createElement("div");
+    div.classList.add("task");
+    div.setAttribute("draggable", "true");
+    div.dataset.id = task.id;
+
+    const heading = document.createElement("h2");
+    heading.textContent = task.title;
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = task.description;
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.type = "button";
+
+    deleteBtn.addEventListener("click", () => {
+        tasks = tasks.filter(item => item.id !== task.id);
+
+        saveTasks();
+        renderTasks();
+    });
+
+    // Remember which card is being dragged
+    div.addEventListener("dragstart", event => {
+        dragElement = div;
+        event.dataTransfer.setData("text/plain", String(task.id));
+        event.dataTransfer.effectAllowed = "move";
+    });
+
+    div.addEventListener("dragend", () => {
+        dragElement = null;
+
+        Object.values(columns).forEach(column => {
+            column.classList.remove("hover-over");
+        });
+    });
+
+    div.append(heading, paragraph, deleteBtn);
+
+    return div;
+}
+
+// Render all tasks from the data array
+function renderTasks() {
+    Object.values(columns).forEach(column => {
+        column.querySelectorAll(".task").forEach(card => {
+            card.remove();
+        });
+    });
+
+    tasks.forEach(task => {
+        const column = columns[task.status];
+
+        if (column) {
+            column.appendChild(createTaskCard(task));
+        }
+    });
+
+    updateCounts();
+}
+
+// Open modal
+addTaskBtn.addEventListener("click", () => {
+    modal.classList.add("active");
+});
+
+// Close modal
+cancle.addEventListener("click", () => {
+    modal.classList.remove("active");
+});
+
+// Add a new task
+addTask.addEventListener("click", event => {
+    event.preventDefault();
+
+    const title = titleInput.value.trim();
+    const description = descriptionInput.value.trim();
+
+    if (!title) {
+        titleInput.focus();
+        return;
+    }
+
+    const newTask = {
+        id: crypto.randomUUID(),
+        title,
+        description,
+        status: "todo"
+    };
+
+    tasks.push(newTask);
+
+    saveTasks();
+    renderTasks();
+
+    titleInput.value = "";
+    descriptionInput.value = "";
+    modal.classList.remove("active");
+});
+
+// Configure drag-and-drop columns
+function dragEventOnColumn(column) {
+    column.addEventListener("dragenter", event => {
+        event.preventDefault();
+        column.classList.add("hover-over");
+    });
+
+    column.addEventListener("dragleave", event => {
+        // Avoid removing the highlight when entering a child
+        if (!column.contains(event.relatedTarget)) {
+            column.classList.remove("hover-over");
+        }
+    });
+
+    column.addEventListener("dragover", event => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+    });
+
+    column.addEventListener("drop", event => {
+        event.preventDefault();
+        column.classList.remove("hover-over");
+
+        const id = event.dataTransfer.getData("text/plain");
+
+        if (!id) return;
+
+        const task = tasks.find(item => String(item.id) === id);
+
+        if (!task) return;
+
+        // Update the data, not just the DOM
+        task.status = column.id;
+
+        saveTasks();
+        renderTasks();
+    });
+}
+
+// Register drag-and-drop for all columns
+Object.values(columns).forEach(dragEventOnColumn);
+
+// Restore saved data and display the board
+loadTasks();
+renderTasks();
