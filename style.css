@@ -1,172 +1,334 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-html,body{
-    height: 100%;
-    width: 100%;
+html, body {
+  height: 100%;
+  width: 100%;
+  background-color: #050505;
+  color: #ededed;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  overflow: hidden;
 }
 
-html{
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+/* 
+:root {
+  --bg: #090A08;
+  --surface: #141510;
+  --surface-hover: #1E2017;
+  --border: #303128;
+  --border-active: #555943;
+
+  --accent: #B5FF00;
+  --accent-glow: rgba(181, 255, 0, 0.16);
+
+  --text-main: #F4F4F0;
+  --text-muted: #92948A;
+
+  --danger: #FF5C5C;
+  --danger-bg: rgba(255, 92, 92, 0.12);
+
+  --radius: 12px;
+} */
+
+
+/* :root {
+  --bg: #0D0D0D;
+  --surface: #191817;
+  --surface-hover: #24211D;
+  --border: #393126;
+  --border-active: #756447;
+
+  --accent: #C6A76B;
+  --accent-glow: rgba(198, 167, 107, 0.18);
+
+  --text-main: #F4F0E8;
+  --text-muted: #A5A098;
+
+  --danger: #E87575;
+  --danger-bg: rgba(232, 117, 117, 0.12);
+
+  --radius: 12px;
+} */
+
+
+
+:root {
+  --bg: #070807;
+  --surface: #151614;
+  --surface-hover: #20211C;
+  --border: #30322B;
+  --border-active: #505445;
+
+  --accent: #B5FF00;
+  --accent-glow: rgba(181, 255, 0, 0.15);
+
+  --text-main: #F2F3ED;
+  --text-muted: #989B90;
+
+  --danger: #FF626B;
+  --danger-bg: rgba(255, 98, 107, 0.12);
+
+  --radius: 12px;
 }
 
-:root{
-    --background-color: #000000;
-    --primary-color: #f4f4f4;
-    --bg-button-color: #1a1a1a;
-    --bg-task-color:#2a2a2a;
-    --delete-color:#bd0909;
-    --add-task-btn-color:rgb(25, 58, 25);
 
-    /* padding variables */
-    --nav-padding: 15px 30px;
-    --section-padding: 15px 30px;
-    --padding-s: 5px;
-    --padding-m: 10px;
-    --padding-l: 15px;
-    --padding-xl: 20px;
-    --padding-xxl: 30px;
-
-    /* border radius variables */
-    --border-radius-s: 5px;
-    --border-radius-m: 10px;
-    --border-radius-l: 15px;
-    --border-radius-xl: 20px;
-    --border-radius-xxl: 30px;
-
+main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-body{
-    background-color: var(--background-color);
-    color: var(--primary-color);
+/* --- NAVBAR --- */
+nav {
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border);
 }
 
-main{
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+nav .left {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-nav{
-    padding: var(--nav-padding);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-nav button{
-    background-color: var(--bg-button-color);
-    border: none;
-    outline: none;
-    color: var(--primary-color);
-    padding: var(--padding-m) var(--padding-l);
-    cursor: pointer;
-    border-radius:var(--border-radius-m) ;
+nav .left::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent);
 }
 
-section{
-    flex-grow: 1;
-    padding: var(--section-padding);
-    display: flex;
-    gap: var(--padding-xxl);
-    justify-content: space-between;
-}
-section .task-column{
-    flex-grow: 1;
-    background-color: var(--bg-button-color);
-    padding: var(--padding-m);
-    display: flex;
-    flex-direction: column;
-    gap: var(--padding-m);
-    border-radius: var(--border-radius-m);
-    transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-}
-section .task-column .headding{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-section .task-column .task{
-    background-color: var(--bg-task-color);
-    padding: var(--padding-m);
-    border-radius: var(--border-radius-m);
-    display:flex;
-    flex-direction: column;
-    gap: var(--padding-s);
-    cursor: grab;
-}
-section .task-column .task button{
-    align-self: flex-end;
-    cursor: pointer;
-    padding: var(--padding-s)  var(--padding-m);
-    border-radius: var(--border-radius-s);
-    border: none;
-    outline: none;
-    background-color: var(--delete-color);
-    color: var(--primary-color);
-}
-section .task-column.hover-over{
-    border: 1px solid var(--primary-color);
-    scale: 1.05;
+nav button {
+  background-color: var(--accent);
+  color: #000000;
+  border: none;
+  font-weight: 600;
+  padding: 10px 18px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px var(--accent-glow);
 }
 
-.modal{
-    position: fixed;
-    height: 100vh;
-    width: 100vw;
-    top: 0;
-    left: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;    
-}
-.modal.active{
-    display: flex;
-}
-.modal .bg{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(53, 52, 52, 0.631);
-    backdrop-filter: blur(5px);
-}
-.modal .center{
-    background-color: var(--bg-button-color);
-    display: flex;
-    flex-direction: column;
-    padding: var(--padding-xxl);
-    border-radius: var(--border-radius-m);
-    z-index: 10;
-    gap: var(--padding-m);
-}
-.modal .center textarea, .modal .center input{
-    background-color: var(--bg-task-color);
-    border: none;
-    outline: none;
-    color: var(--primary-color);
-    padding: var(--border-radius-m);
-    border-radius: var(--border-radius-s);
-}
-.modal .center .btn{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.modal .center button{
-    border: none;
-    outline: none;
-    color: var(--primary-color);
-    padding: var(--padding-m) var(--border-radius-l);
-    cursor: pointer;
-    border-radius: var(--border-radius-s);
-}
-.modal .center .add-new-task{
-    background-color: var(--add-task-btn-color);
-}
-.modal .center #cancle{
-    background-color: var(--delete-color);
+nav button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
 }
 
+/* --- BOARD CONTAINER --- */
+section.board {
+  flex-grow: 1;
+  padding: 32px;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  overflow-x: auto;
+  background-color: var(--bg);
+}
+
+section .task-column {
+  flex: 1;
+  min-width: 300px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--radius);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+section .task-column .headding {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+section .task-column .headding .left {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+section .task-column .headding .right {
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: var(--border);
+  color: var(--text-main);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+/* --- TASK CARD --- */
+section .task-column .task {
+  background-color: var(--surface-hover);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+section .task-column .task:hover {
+  border-color: var(--border-active);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+section .task-column .task:active {
+  cursor: grabbing;
+}
+
+section .task-column .task h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+section .task-column .task p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+section .task-column .task button {
+  align-self: flex-end;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+section .task-column .task button:hover {
+  background-color: var(--danger);
+  color: #ffffff;
+}
+
+/* Drag State */
+section .task-column.hover-over {
+  border-color: var(--accent);
+  background-color: rgba(34, 197, 94, 0.03);
+}
+
+/* --- MODAL --- */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal .bg {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.modal .center {
+  background-color: var(--surface);
+  border: 1px solid var(--border-active);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border-radius: var(--radius);
+  z-index: 10;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.modal .center textarea, 
+.modal .center input {
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  outline: none;
+  color: var(--text-main);
+  padding: 12px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease;
+}
+
+.modal .center input:focus, 
+.modal .center textarea:focus {
+  border-color: var(--accent);
+}
+
+.modal .center textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.modal .center .btn {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.modal .center button {
+  border: none;
+  outline: none;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.modal .center .add-new-task {
+  background-color: var(--accent);
+  color: #000000;
+}
+
+.modal .center .add-new-task:hover {
+  filter: brightness(1.1);
+}
+
+.modal .center #cancle {
+  background-color: var(--border);
+  color: var(--text-main);
+}
+
+.modal .center #cancle:hover {
+  background-color: var(--border-active);
+}
