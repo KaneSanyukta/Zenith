@@ -64,6 +64,7 @@ function createTaskCard(task) {
     heading.textContent = task.title;
 
     const paragraph = document.createElement("p");
+    paragraph.classList.add("hide-scrollbar");
     paragraph.textContent = task.description;
 
     const deleteBtn = document.createElement("button");

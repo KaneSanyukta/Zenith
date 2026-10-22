@@ -91,25 +91,19 @@ nav {
   justify-content: space-between;
   background-color: var(--surface);
   border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
 }
 
 nav .left {
   font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--text-main);
+  color: var(--accent);
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-nav .left::after {
-  content: '';
-  width: 6px;
-  height: 6px;
-  background-color: var(--accent);
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--accent);
+  text-shadow: 0 0 10px var(--accent);
 }
 
 nav button {
@@ -144,6 +138,8 @@ section.board {
 section .task-column {
   flex: 1;
   min-width: 300px;
+  height: max-content;
+  min-height: 75vh;
   background-color: var(--surface);
   border: 1px solid var(--border);
   padding: 16px;
@@ -331,4 +327,14 @@ section .task-column.hover-over {
 
 .modal .center #cancle:hover {
   background-color: var(--border-active);
+}
+
+.hide-scrollbar{
+  overflow: scroll;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar{
+    display: none;
+  }
+  -ms-overflow-style: none;
 }
